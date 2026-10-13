@@ -122,6 +122,14 @@ File: `src/main/resources/application.properties`
 | `spring.jpa.hibernate.ddl-auto=update` | Hibernate creates or updates tables on startup (development) |
 | `spring.jpa.hibernate.naming.physical-strategy` | Keeps column names exactly as written in the entity |
 
+File: `src/main/resources/logback-spring.xml`
+
+| Setting | Purpose |
+|---|---|
+| Console appender | Shows logs in the Eclipse Console |
+| File appender | Writes logs to `log/monitoring-yyyy-MM-dd.log`, one file per date |
+| Root level | `INFO` |
+
 ## 8. Duplicate check (two levels)
 1. Service level: `existsByUserIdAndReasonIgnoreCase(userId, reason)` returns `409` with a clear message.
 2. Database level: the unique key blocks duplicates if two requests arrive at the same time; the handler also returns `409`.

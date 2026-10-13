@@ -7,6 +7,28 @@ Every new feature or change is added here (newest first).
 
 ---
 
+## 2026-10-13 – Log files saved by date
+
+Logs are written to the Eclipse Console and also to a file inside the project's `log` folder. A new file is created for each date.
+
+| Item | Value |
+|---|---|
+| Folder | `log` (inside the project folder, created automatically) |
+| File name | `monitoring-yyyy-MM-dd.log`, for example `monitoring-2026-10-13.log` |
+| Same day, app restarted | New lines are added to the same day's file |
+| New day | A new file starts automatically at midnight |
+| Line format | `2026-10-13 23:51:07.123 INFO  [http-nio-8080-exec-1] m.m.c.CategoryManagerController - STEP 1 ...` |
+
+Files added/changed:
+- Added `src/main/resources/logback-spring.xml` (console + daily file settings).
+- Added `log/` to `.gitignore` so log files are not pushed to GitHub.
+
+Notes:
+- The folder is relative, so it works on any laptop. Start the app from the project folder (Eclipse does this by default).
+- Old log files are not deleted automatically.
+
+---
+
 ## 2026-10-13 – Step-by-step logging for Category Manager flow
 
 Every step of the add-category flow now writes a log line to the Eclipse Console, so the flow can be followed while testing in Postman.
