@@ -1,7 +1,7 @@
 # Monitoring Project – Architecture
 
 ## 1. Overview
-A Spring Boot REST backend using a layered architecture. Requests are tested from Postman; there is no frontend yet.
+A Spring Boot REST backend using a layered architecture, with a small React UI (`frontend` folder) for adding categories. The API can also be tested from Postman.
 
 | Item | Value |
 |---|---|
@@ -134,8 +134,43 @@ File: `src/main/resources/logback-spring.xml`
 1. Service level: `existsByUserIdAndReasonIgnoreCase(userId, reason)` returns `409` with a clear message.
 2. Database level: the unique key blocks duplicates if two requests arrive at the same time; the handler also returns `409`.
 
-## 9. Planned (not built yet)
-- Other Category Manager operations (list, update, delete).
+## 9. UI (frontend)
+
+```
+ Browser  http://localhost:5173
+    |
+    |  React app (Vite dev server)
+    |  /api/...  is forwarded (proxy)
+    v
+ Spring Boot backend  http://localhost:8080
+```
+
+| Item | Value |
+|---|---|
+| Folder | `frontend` |
+| Stack | React 19, Vite 7 |
+| Dev URL | http://localhost:5173 |
+| Proxy | `/api` goes to `http://localhost:8080` (set in `vite.config.js`), so the backend needs no CORS setting |
+
+```
+frontend
+├── index.html
+├── package.json
+├── vite.config.js
+└── src
+    ├── main.jsx                      (app start)
+    ├── App.jsx                       (page)
+    ├── styles.css
+    ├── components
+    │   └── CategoryAddForm.jsx       (form, checks input, shows result)
+    └── api
+        └── categoryApi.js            (POST /api/category-manager/add)
+```
+
+Flow: form checks input -> `categoryApi.js` sends the request -> backend returns `ApiResponse` -> form shows success (`201`), field errors (`400`), the duplicate message (`409`), or "cannot reach the server".
+
+## 10. Planned (not built yet)
+- Other Category Manager operations (list, update, delete), with matching UI screens.
 - Other modules.
 
 *Update this file when a new layer, module or integration is added.*

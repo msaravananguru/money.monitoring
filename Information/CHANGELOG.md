@@ -7,6 +7,43 @@ Every new feature or change is added here (newest first).
 
 ---
 
+## 2026-10-14 – React UI: Add Category screen
+
+A simple, quiet screen to add a category from the browser. It calls the existing add-category API.
+
+| Item | Value |
+|---|---|
+| Folder | `frontend` (inside the project folder) |
+| Stack | React 19, Vite 7 |
+| Run | `cd frontend`, `npm install`, `npm run dev` |
+| URL | http://localhost:5173 |
+| Backend it calls | `POST /api/category-manager/add` (port 8080) |
+
+How it behaves:
+- Fields: User ID, Category, Reason. Button: **Add category**.
+- Checks the same rules as the backend before sending (user ID is a positive number, category up to 100 characters, reason up to 255 characters).
+- `201`: shows "Category added. S.No <number>." The Reason field is cleared and focused. User ID and Category are kept, because one category can hold many reasons.
+- `409` (same reason already saved for the user): the message from the backend is shown under Reason.
+- `400`: the field errors from the backend are shown under each field.
+- Server not running: shows "Cannot reach the server. Check that the backend is running on port 8080."
+
+Files added (`frontend`):
+
+| File | Purpose |
+|---|---|
+| `package.json`, `vite.config.js`, `index.html`, `.gitignore` | Project and build setup. Vite forwards `/api` to `http://localhost:8080`, so no CORS change is needed on the backend |
+| `src/main.jsx`, `src/App.jsx` | App start and page |
+| `src/components/CategoryAddForm.jsx` | The form |
+| `src/api/categoryApi.js` | The call to the backend |
+| `src/styles.css` | Styles |
+
+Notes:
+- No backend change was made for the UI.
+- Needs Node.js 20.19 or newer.
+- `node_modules` and `dist` are ignored by git.
+
+---
+
 ## 2026-10-13 – Log files saved by date
 
 Logs are written to the Eclipse Console and also to a file inside the project's `log` folder. A new file is created for each date.

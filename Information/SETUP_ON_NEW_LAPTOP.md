@@ -8,10 +8,9 @@ The code comes from GitHub. **The database data does not come with it** – the 
 
 ## Step 0 – On the OLD laptop (do this first)
 
-The new laptop can only pull what has been pushed. Open Command Prompt in the project folder:
+The new laptop can only pull what has been pushed. Open Command Prompt in the `money.monitoring` project folder:
 
 ```bash
-cd E:\sudar.finance\monitoring
 git status
 git add .
 git commit -m "Add Category Manager API and Information docs"
@@ -31,6 +30,7 @@ Check on GitHub in your browser that the latest files are there (including the `
 | MySQL Server + Workbench | 8.x | Workbench opens and connects |
 | Eclipse IDE for Enterprise Java (or STS) | Latest | Opens |
 | Postman | Latest | Opens |
+| Node.js | 20.19 or newer (or 22+), needed for the UI | `node -v` |
 
 Notes:
 - Remember the MySQL `root` password you set during installation.
@@ -44,10 +44,8 @@ Open Command Prompt:
 
 ```bash
 cd E:\
-mkdir sudar.finance
-cd sudar.finance
-git clone https://github.com/msaravananguru/money.monitoring.git monitoring
-cd monitoring
+git clone https://github.com/msaravananguru/money.monitoring.git
+cd money.monitoring
 ```
 
 If GitHub asks you to sign in, use your GitHub username and a Personal Access Token as the password (GitHub → Settings → Developer settings → Personal access tokens). Normal account passwords no longer work for git.
@@ -97,7 +95,7 @@ These must match what you created in Step 3. If your MySQL uses a port other tha
 ## Step 5 – Open the project in Eclipse
 
 1. **File → Import → Maven → Existing Maven Projects → Next**.
-2. Browse to `E:\sudar.finance\monitoring` and click **Finish**.
+2. Browse to the cloned `money.monitoring` folder and click **Finish**.
 3. Wait for the bottom-right progress bar (downloading dependencies) to finish. The first time can take a few minutes and needs internet.
 4. Set Java 21: right-click project → **Properties → Java Compiler** → compiler compliance **21**. Also check **Window → Preferences → Java → Installed JREs** has JDK 21 ticked.
 5. Right-click project → **Maven → Update Project** → tick **Force Update** → OK.
@@ -112,7 +110,7 @@ Right-click `MonitoringApplication.java` → **Run As → Java Application**.
 
 **Option B – from Command Prompt**
 ```bash
-cd E:\sudar.finance\monitoring
+cd E:\money.monitoring
 mvnw.cmd spring-boot:run
 ```
 
@@ -152,6 +150,23 @@ Expected: `201 Created`. Sending the same `userId` and `reason` again returns `4
 
 ---
 
+## Step 9 – Run the UI (React)
+
+The UI is in the `frontend` folder. Keep the backend from Step 6 running, then open a **second** Command Prompt:
+
+```bash
+cd money.monitoring\frontend
+npm install
+npm run dev
+```
+
+- `npm install` is needed only the first time (it needs internet).
+- Open **http://localhost:5173** in the browser.
+- Enter User ID, Category and Reason, then click **Add category**.
+- The UI sends requests to the backend on port 8080 automatically, so no extra setting is needed.
+
+---
+
 ## Troubleshooting
 
 | Problem | Cause | Fix |
@@ -162,6 +177,9 @@ Expected: `201 Created`. Sending the same `userId` and `reason` again returns `4
 | `Port 8080 was already in use` | Another app uses 8080 | Add `server.port=8081` to `application.properties` and use 8081 in Postman |
 | `release version 21 not supported` / wrong Java | Old JDK used | Install JDK 21 and select it in Eclipse (Step 5, point 4) |
 | Red errors after import | Dependencies not downloaded | Check internet, then Maven → Update Project (force update) |
+| `npm` is not recognized | Node.js not installed | Install Node.js (Step 1), then open a new Command Prompt |
+| UI shows `Cannot reach the server` | Backend is not running | Start the backend (Step 6), then try again |
+| `npm install` fails or shows engine warnings | Node.js too old | Install Node.js 20.19 or newer |
 | `git push/pull` asks for a password | GitHub needs a token | Use a Personal Access Token (Step 2) |
 | `category_manager` table missing | App did not start | Read the red error in the Eclipse Console |
 | Tables are empty on the new laptop | Data is not part of git | Expected. Re-add data through the API, or export and import it from the old MySQL with Workbench (Server → Data Export / Data Import) |
@@ -177,5 +195,6 @@ Expected: `201 Created`. Sending the same `userId` and `reason` again returns `4
 - [ ] Project imported in Eclipse, no errors in Problems tab
 - [ ] App started on port 8080
 - [ ] Postman returns `201 Created`
+- [ ] `npm install` and `npm run dev` done in `frontend`, UI opens at http://localhost:5173
 
 *The database password is stored in `application.properties`, which is in the Git repository. Use a different password if the repository is public or shared.*
